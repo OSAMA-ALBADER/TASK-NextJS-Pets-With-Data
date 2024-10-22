@@ -6,10 +6,20 @@ import ActionButtons from "./components/ActionButtons";
 
 async function PetDetailPage({ params }) {
   const { id } = await params;
-  const pet = pets.find((pet) => pet.id === +id);
-
-  if (!pet) redirect("/pets");
-
+  let pet;
+  try {
+    // getting the pet using id from param
+    const response = await fetch(
+      `https://pets-react-query-backend.eapi.joincoded.com/pets/${id}`
+    );
+    pet = await response.json();
+  } catch (error) {
+    // handling the error
+    console.error("No pet found");
+    redirect("/pets");
+    // const pet = pets.find((pet) => pet.id === +id);
+    // if (!pet) redirect("/pets");
+  }
   const { image, name, type, adopted } = pet;
 
   return (
